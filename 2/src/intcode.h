@@ -12,4 +12,6 @@ typedef struct intcode_program intcode_program;
 
 intcode_program* str_to_intcode_program(char raw[]);
 
+void intcode_program_free(intcode_program *program);
+
 #endif // INTCODE_H

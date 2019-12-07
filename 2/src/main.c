@@ -17,5 +17,7 @@ int main() {
 	}
 	printf("\nIP: %zu\n", program->ip);
 
+	intcode_program_free(program);
+
 	return 0;
 }

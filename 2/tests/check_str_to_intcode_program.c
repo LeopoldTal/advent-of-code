@@ -10,6 +10,8 @@ START_TEST(test_empty_program) {
 	ck_assert_int_eq(program->length, 0);
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_ptr_null(program->instructions);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -22,6 +24,8 @@ START_TEST(test_1_instruction_program) {
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_ptr_nonnull(program->instructions);
 	ck_assert_int_eq(program->instructions[0], 42);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -35,6 +39,8 @@ START_TEST(test_2_instructions_program) {
 	ck_assert_ptr_nonnull(program->instructions);
 	ck_assert_int_eq(program->instructions[0], 3);
 	ck_assert_int_eq(program->instructions[1], 14);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -51,6 +57,8 @@ START_TEST(test_long_program) {
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_ptr_nonnull(program->instructions);
 	ck_assert_mem_eq(program->instructions, expected_instructions, 18);
+
+	intcode_program_free(program);
 }
 END_TEST
 

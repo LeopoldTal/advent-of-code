@@ -42,3 +42,8 @@ intcode_program *str_to_intcode_program(char raw[]) {
 
 	return program;
 }
+
+void intcode_program_free(intcode_program *program) {
+	free(program->instructions);
+	free(program);
+}
