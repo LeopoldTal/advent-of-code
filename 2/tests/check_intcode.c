@@ -11,6 +11,7 @@ int main() {
 	srunner_add_suite(sr, program_peek_suite());
 	srunner_add_suite(sr, program_poke_suite());
 	srunner_add_suite(sr, program_step_suite());
+	srunner_add_suite(sr, program_run_suite());
 
 	srunner_run_all(sr, CK_VERBOSE);
 	number_failed = srunner_ntests_failed(sr);

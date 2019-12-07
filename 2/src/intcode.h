@@ -31,5 +31,6 @@ int program_peek(intcode_program *program, size_t index);
 void program_poke(intcode_program *program, size_t index, int value);
 
 void program_step(intcode_program *program);
+void program_run(intcode_program *program);
 
 #endif // INTCODE_H

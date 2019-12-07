@@ -140,3 +140,9 @@ void program_step(intcode_program *program) {
 
 	program->ip += 4;
 }
+
+void program_run(intcode_program *program) {
+	while (program->state == PROGRAM_RUNNING) {
+		program_step(program);
+	}
+}
