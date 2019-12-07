@@ -147,7 +147,7 @@ void program_run(intcode_program *program) {
 	}
 }
 
-int program_run_with_alarm(char raw[]) {
+int program_run_with_input(char raw[], int noun, int verb) {
 	intcode_program *program;
 	int ret;
 
@@ -158,8 +158,8 @@ int program_run_with_alarm(char raw[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	program_poke(program, 1, 12);
-	program_poke(program, 2, 2);
+	program_poke(program, 1, noun);
+	program_poke(program, 2, verb);
 	program_run(program);
 
 	if (program->state == PROGRAM_ERROR) {
@@ -171,4 +171,8 @@ int program_run_with_alarm(char raw[]) {
 	ret = program_peek(program, 0);
 	intcode_program_free(program);
 	return ret;
+}
+
+int program_run_with_alarm(char raw[]) {
+	return program_run_with_input(raw, 12, 2);
 }

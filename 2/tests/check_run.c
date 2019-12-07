@@ -109,6 +109,15 @@ START_TEST(test_bad_length) {
 }
 END_TEST
 
+START_TEST(test_input) {
+	char raw[] = "1,1000,1000,0,99";
+	int ret;
+
+	ret = program_run_with_input(raw, 4, 1);
+	ck_assert_int_eq(ret, 103);
+}
+END_TEST
+
 START_TEST(test_alarm) {
 	char raw[] = "1,12,2,0,2,0,1,0,1,0,4,0,99";
 	int ret;
@@ -120,7 +129,7 @@ END_TEST
 
 Suite* program_run_suite() {
 	Suite *s;
-	TCase *tc_valid, *tc_invalid, *tc_alarm;
+	TCase *tc_valid, *tc_invalid, *tc_input, *tc_alarm;
 
 	s = suite_create("Run simple programs");
 
@@ -136,6 +145,10 @@ Suite* program_run_suite() {
 	tcase_add_test(tc_valid, test_bad_opcode);
 	tcase_add_test(tc_valid, test_bad_length);
 	suite_add_tcase(s, tc_invalid);
+
+	tc_input = tcase_create("With input");
+	tcase_add_test(tc_input, test_input);
+	suite_add_tcase(s, tc_input);
 
 	tc_alarm = tcase_create("1202 alarm");
 	tcase_add_test(tc_alarm, test_alarm);

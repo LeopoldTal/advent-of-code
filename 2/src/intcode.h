@@ -33,6 +33,7 @@ void program_poke(intcode_program *program, size_t index, int value);
 void program_step(intcode_program *program);
 void program_run(intcode_program *program);
 
+int program_run_with_input(char raw[], int noun, int verb);
 int program_run_with_alarm(char raw[]);
 
 #endif // INTCODE_H
