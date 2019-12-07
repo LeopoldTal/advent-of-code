@@ -1,23 +1,20 @@
 #include <stdio.h>
+#include <string.h>
 #include "intcode.h"
 
 int main() {
-	char test_string[] = "3,14";
+	char *buffer = NULL;
+	size_t buffer_size = 0;
 
-	intcode_program *program = NULL;
-	int index;
+	getline(&buffer, &buffer_size, stdin);
 
-	printf("%s\n", test_string);
-	program = str_to_intcode_program(test_string);
-
-	printf("Done converting:\n");
-	printf("Length: %zu\n", program->length);
-	for (index = 0 ; index < program->length ; index++) {
-		printf("%d ", program->instructions[index]);
+	if (!buffer) {
+		printf("Couldn't read input.\n");
+		exit(EXIT_FAILURE);
 	}
-	printf("\nIP: %zu\n", program->ip);
 
-	intcode_program_free(program);
+	printf("%d\n", program_run_with_alarm(buffer));
+	free(buffer);
 
 	return 0;
 }
