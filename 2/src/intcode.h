@@ -14,4 +14,7 @@ intcode_program* str_to_intcode_program(char raw[]);
 
 void intcode_program_free(intcode_program *program);
 
+int program_peek(intcode_program *program, size_t index);
+void program_poke(intcode_program *program, size_t index, int value);
+
 #endif // INTCODE_H
