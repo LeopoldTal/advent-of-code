@@ -47,6 +47,22 @@ START_TEST(test_2_instructions_program) {
 }
 END_TEST
 
+START_TEST(test_trailing_newline) {
+	char raw[] = "0,32\n";
+	intcode_program *program;
+
+	program = str_to_intcode_program(raw);
+	ck_assert_int_eq(program->length, 2);
+	ck_assert_int_eq(program->ip, 0);
+	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
+	ck_assert_ptr_nonnull(program->instructions);
+	ck_assert_int_eq(program->instructions[0], 0);
+	ck_assert_int_eq(program->instructions[1], 32);
+
+	intcode_program_free(program);
+}
+END_TEST
+
 START_TEST(test_long_program) {
 	char raw[] = "1,2,3,4,5,6,7,8,9,10,0,11,0,0,12,256,1024,0";
 	int expected_instructions[] = {
@@ -79,8 +95,8 @@ Suite* str_to_intcode_program_suite() {
 	tc_simple = tcase_create("Simple programs");
 	tcase_add_test(tc_simple, test_1_instruction_program);
 	tcase_add_test(tc_simple, test_2_instructions_program);
+	tcase_add_test(tc_simple, test_trailing_newline);
 	suite_add_tcase(s, tc_simple);
-	s = suite_create("Convert string to Intcode program");
 
 	tc_long = tcase_create("Long program");
 	tcase_add_test(tc_long, test_long_program);
