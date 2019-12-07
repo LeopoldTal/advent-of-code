@@ -9,6 +9,7 @@ START_TEST(test_empty_program) {
 	program = str_to_intcode_program(raw);
 	ck_assert_int_eq(program->length, 0);
 	ck_assert_int_eq(program->ip, 0);
+	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_ptr_null(program->instructions);
 
 	intcode_program_free(program);
@@ -22,6 +23,7 @@ START_TEST(test_1_instruction_program) {
 	program = str_to_intcode_program(raw);
 	ck_assert_int_eq(program->length, 1);
 	ck_assert_int_eq(program->ip, 0);
+	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_ptr_nonnull(program->instructions);
 	ck_assert_int_eq(program->instructions[0], 42);
 
@@ -36,6 +38,7 @@ START_TEST(test_2_instructions_program) {
 	program = str_to_intcode_program(raw);
 	ck_assert_int_eq(program->length, 2);
 	ck_assert_int_eq(program->ip, 0);
+	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_ptr_nonnull(program->instructions);
 	ck_assert_int_eq(program->instructions[0], 3);
 	ck_assert_int_eq(program->instructions[1], 14);
@@ -55,8 +58,9 @@ START_TEST(test_long_program) {
 	program = str_to_intcode_program(raw);
 	ck_assert_int_eq(program->length, 18);
 	ck_assert_int_eq(program->ip, 0);
+	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_ptr_nonnull(program->instructions);
-	ck_assert_mem_eq(program->instructions, expected_instructions, 18);
+	ck_assert_mem_eq(program->instructions, expected_instructions, 18 * sizeof(int));
 
 	intcode_program_free(program);
 }

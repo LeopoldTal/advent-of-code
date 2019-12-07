@@ -39,6 +39,7 @@ intcode_program *str_to_intcode_program(char raw[]) {
 	
 	program->length = length;
 	program->ip = 0;
+	program->state = PROGRAM_RUNNING;
 	program->instructions = instructions;
 
 	return program;
@@ -65,6 +66,22 @@ int program_peek(intcode_program *program, size_t index) {
 	return program->instructions[index];
 }
 
+int program_peek_indirect(intcode_program *program, size_t indirect_index) {
+	int index;
+	index = program_peek(program, indirect_index);
+
+	if (index >= program->length) {
+		printf(
+			"Tried to peek at position %d referenced at %zu but program length is only %zu.\n",
+			index, indirect_index, program->length
+		);
+		program->state = PROGRAM_ERROR;
+		return -1;
+	}
+
+	return program_peek(program, index);
+}
+
 void program_poke(intcode_program *program, size_t index, int value) {
 	if (!program) {
 		printf("Tried to poke %d at position %zu but program is NULL.\n", value, index);
@@ -79,4 +96,47 @@ void program_poke(intcode_program *program, size_t index, int value) {
 	}
 
 	program->instructions[index] = value;
+}
+
+void program_step(intcode_program *program) {
+	int opcode, a, b, dest;
+
+	if (program->state == PROGRAM_HALTED) {
+		printf("Tried through step through already halted program.\n");
+		exit(EXIT_FAILURE);
+	}
+	if (program->state == PROGRAM_ERROR) {
+		printf("Tried through step through program but already failed with error.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	opcode = program_peek(program, program->ip);
+
+	if (opcode == OPCODE_HALT) {
+		program->state = PROGRAM_HALTED;
+		return;
+	}
+
+	if (opcode != OPCODE_ADD && opcode != OPCODE_MULT) {
+		printf("Bad opcode: %d at position %zu.\n", opcode, program->ip);
+		program->state = PROGRAM_ERROR;
+		return;
+	}
+
+	if (program->ip + 4 >= program->length) {
+		printf("Unexpected program end at position %zu.\n", program->ip);
+		program->state = PROGRAM_ERROR;
+		return;
+	}
+
+	a = program_peek_indirect(program, program->ip + 1);
+	b = program_peek_indirect(program, program->ip + 2);
+	if (program->state == PROGRAM_ERROR) { // lookup failed
+		return;
+	}
+
+	dest = program_peek(program, program->ip + 3);
+	program_poke(program, dest, opcode == OPCODE_ADD ? a + b : a * b);
+
+	program->ip += 4;
 }
