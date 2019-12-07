@@ -2,10 +2,9 @@
 #include "../src/intcode.h"
 
 START_TEST(test_peek) {
-	char raw[] = "613,18";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("613,18");
 	ck_assert_int_eq(program_peek(program, 0), 613);
 	ck_assert_int_eq(program_peek(program, 1), 18);
 
@@ -19,19 +18,17 @@ START_TEST(test_peek_null) {
 END_TEST
 
 START_TEST(test_peek_out_of_range) {
-	char raw[] = "613,18";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("613,18");
 	program_peek(program, 2);
 }
 END_TEST
 
 START_TEST(test_poke) {
-	char raw[] = "1,2,3";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,2,3");
 	ck_assert_int_eq(program_peek(program, 1), 2);
 	program_poke(program, 1, 1337);
 	ck_assert_int_eq(program_peek(program, 1), 1337);
@@ -46,10 +43,9 @@ START_TEST(test_poke_null) {
 END_TEST
 
 START_TEST(test_poke_out_of_range) {
-	char raw[] = "1,2,3";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,2,3");
 	program_poke(program, 3, 42);
 }
 END_TEST

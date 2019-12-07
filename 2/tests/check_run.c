@@ -82,10 +82,9 @@ START_TEST(test_program_5) {
 END_TEST
 
 START_TEST(test_bad_opcode) {
-	char raw[] = "1,99,1,4,99";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,99,1,4,99");
 
 	program_run(program);
 
@@ -96,10 +95,9 @@ START_TEST(test_bad_opcode) {
 END_TEST
 
 START_TEST(test_bad_length) {
-	char raw[] = "1,2,3,4,1,2,3,4";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,2,3,4,1,2,3,4");
 
 	program_run(program);
 
@@ -110,19 +108,17 @@ START_TEST(test_bad_length) {
 END_TEST
 
 START_TEST(test_input) {
-	char raw[] = "1,1000,1000,0,99";
 	int ret;
 
-	ret = program_run_with_input(raw, 4, 1);
+	ret = program_run_with_input("1,1000,1000,0,99", 4, 1);
 	ck_assert_int_eq(ret, 103);
 }
 END_TEST
 
 START_TEST(test_alarm) {
-	char raw[] = "1,12,2,0,2,0,1,0,1,0,4,0,99";
 	int ret;
 
-	ret = program_run_with_alarm(raw);
+	ret = program_run_with_alarm("1,12,2,0,2,0,1,0,1,0,4,0,99");
 	ck_assert_int_eq(ret, 1214);
 }
 END_TEST

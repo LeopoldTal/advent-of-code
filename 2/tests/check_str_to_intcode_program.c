@@ -3,10 +3,9 @@
 #include "../src/intcode.h"
 
 START_TEST(test_empty_program) {
-	char raw[] = "";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("");
 	ck_assert_int_eq(program->length, 0);
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
@@ -17,10 +16,9 @@ START_TEST(test_empty_program) {
 END_TEST
 
 START_TEST(test_1_instruction_program) {
-	char raw[] = "42";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("42");
 	ck_assert_int_eq(program->length, 1);
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
@@ -32,10 +30,9 @@ START_TEST(test_1_instruction_program) {
 END_TEST
 
 START_TEST(test_2_instructions_program) {
-	char raw[] = "3,14";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("3,14");
 	ck_assert_int_eq(program->length, 2);
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
@@ -48,10 +45,9 @@ START_TEST(test_2_instructions_program) {
 END_TEST
 
 START_TEST(test_trailing_newline) {
-	char raw[] = "0,32\n";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("0,32\n");
 	ck_assert_int_eq(program->length, 2);
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);

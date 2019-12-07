@@ -3,20 +3,29 @@
 #include <string.h>
 #include "intcode.h"
 
-intcode_program *str_to_intcode_program(char raw[]) {
+intcode_program *str_to_intcode_program(const char raw[]) {
 	const int BUFFER_INC_SIZE = 8; // small 'cuz I enjoy watching buffers grow
 
+	char* intcode_source;
 	int length = 0;
 	int buffer_size = 0;
 
 	char* cur_instruction;
-	char* rest = raw;
+	char* rest;
 	int *instructions = NULL;
 
 	intcode_program *program;
 
 	if (strlen(raw) > 0) {
-		cur_instruction = strtok_r(raw, ",", &rest);
+		// Make a fresh copy so we don't clobber the original string
+		intcode_source = malloc((strlen(raw) + 1) * sizeof(char));
+		if (!intcode_source) {
+			return NULL;
+		}
+		strncpy(intcode_source, raw, strlen(raw));
+
+		rest = intcode_source;
+		cur_instruction = strtok_r(intcode_source, ",", &rest);
 		while (cur_instruction) {
 			if (buffer_size <= length) {
 				buffer_size += BUFFER_INC_SIZE;
@@ -147,7 +156,7 @@ void program_run(intcode_program *program) {
 	}
 }
 
-int program_run_with_input(char raw[], int noun, int verb) {
+int program_run_with_input(const char raw[], const int noun, const int verb) {
 	intcode_program *program;
 	int ret;
 
@@ -165,7 +174,7 @@ int program_run_with_input(char raw[], int noun, int verb) {
 	if (program->state == PROGRAM_ERROR) {
 		printf("Error running program\n");
 		intcode_program_free(program);
-		exit(EXIT_FAILURE);
+		return -1;
 	}
 
 	ret = program_peek(program, 0);
@@ -173,6 +182,22 @@ int program_run_with_input(char raw[], int noun, int verb) {
 	return ret;
 }
 
-int program_run_with_alarm(char raw[]) {
+int program_run_with_alarm(const char raw[]) {
 	return program_run_with_input(raw, 12, 2);
+}
+
+int program_find_inputs(const char raw[], const int target) {
+	// BRUTE FORCE!
+	int noun, verb, out;
+
+	for (verb = 0 ; verb < 100 ; verb ++) {
+		for (noun = 0 ; noun < 100 ; noun ++) {
+			out = program_run_with_input(raw, noun, verb);
+			if (out == target) {
+				return 100 * noun + verb;
+			}
+		}
+	}
+
+	return -1;
 }

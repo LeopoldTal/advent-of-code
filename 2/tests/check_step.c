@@ -2,10 +2,9 @@
 #include "../src/intcode.h"
 
 START_TEST(test_halted) {
-	char raw[] = "1,2,3,4,0";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,2,3,4,0");
 	program->state = PROGRAM_HALTED;
 
 	program_step(program);
@@ -13,10 +12,9 @@ START_TEST(test_halted) {
 END_TEST
 
 START_TEST(test_error) {
-	char raw[] = "1,2,3,4,0";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,2,3,4,0");
 	program->state = PROGRAM_ERROR;
 
 	program_step(program);
@@ -79,10 +77,9 @@ START_TEST(test_mult) {
 END_TEST
 
 START_TEST(test_halt) {
-	char raw[] = "99";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("99");
 
 	program_step(program);
 
@@ -96,10 +93,9 @@ START_TEST(test_halt) {
 END_TEST
 
 START_TEST(test_bad_opcode) {
-	char raw[] = "42";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("42");
 
 	program_step(program);
 
@@ -110,10 +106,9 @@ START_TEST(test_bad_opcode) {
 END_TEST
 
 START_TEST(test_unexpected_program_end) {
-	char raw[] = "1,0,0";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,0,0");
 
 	program_step(program);
 
@@ -124,10 +119,9 @@ START_TEST(test_unexpected_program_end) {
 END_TEST
 
 START_TEST(test_index_out_of_range) {
-	char raw[] = "1,4,0,0";
 	intcode_program *program;
 
-	program = str_to_intcode_program(raw);
+	program = str_to_intcode_program("1,4,0,0");
 
 	program_step(program);
 
