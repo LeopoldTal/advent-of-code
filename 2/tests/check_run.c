@@ -12,6 +12,8 @@ START_TEST(test_program_1) {
 
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_mem_eq(program->instructions, expected, 12 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -26,6 +28,8 @@ START_TEST(test_program_2) {
 
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_mem_eq(program->instructions, expected, 5 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -40,6 +44,8 @@ START_TEST(test_program_3) {
 
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_mem_eq(program->instructions, expected, 5 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -54,6 +60,8 @@ START_TEST(test_program_4) {
 
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_mem_eq(program->instructions, expected, 6 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -68,6 +76,8 @@ START_TEST(test_program_5) {
 
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_mem_eq(program->instructions, expected, 9 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -80,6 +90,8 @@ START_TEST(test_bad_opcode) {
 	program_run(program);
 
 	ck_assert_int_eq(program->state, PROGRAM_ERROR);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -92,12 +104,23 @@ START_TEST(test_bad_length) {
 	program_run(program);
 
 	ck_assert_int_eq(program->state, PROGRAM_ERROR);
+
+	intcode_program_free(program);
+}
+END_TEST
+
+START_TEST(test_alarm) {
+	char raw[] = "1,12,2,0,2,0,1,0,1,0,4,0,99";
+	int ret;
+
+	ret = program_run_with_alarm(raw);
+	ck_assert_int_eq(ret, 1214);
 }
 END_TEST
 
 Suite* program_run_suite() {
 	Suite *s;
-	TCase *tc_valid, *tc_invalid;
+	TCase *tc_valid, *tc_invalid, *tc_alarm;
 
 	s = suite_create("Run simple programs");
 
@@ -113,6 +136,10 @@ Suite* program_run_suite() {
 	tcase_add_test(tc_valid, test_bad_opcode);
 	tcase_add_test(tc_valid, test_bad_length);
 	suite_add_tcase(s, tc_invalid);
+
+	tc_alarm = tcase_create("1202 alarm");
+	tcase_add_test(tc_alarm, test_alarm);
+	suite_add_tcase(s, tc_alarm);
 
 	return s;
 }

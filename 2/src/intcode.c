@@ -146,3 +146,29 @@ void program_run(intcode_program *program) {
 		program_step(program);
 	}
 }
+
+int program_run_with_alarm(char raw[]) {
+	intcode_program *program;
+	int ret;
+
+	program = str_to_intcode_program(raw);
+
+	if (!program) {
+		printf("Failed to build program!\n");
+		exit(EXIT_FAILURE);
+	}
+
+	program_poke(program, 1, 12);
+	program_poke(program, 2, 2);
+	program_run(program);
+
+	if (program->state == PROGRAM_ERROR) {
+		printf("Error running program\n");
+		intcode_program_free(program);
+		exit(EXIT_FAILURE);
+	}
+
+	ret = program_peek(program, 0);
+	intcode_program_free(program);
+	return ret;
+}

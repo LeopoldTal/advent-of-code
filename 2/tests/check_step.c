@@ -36,6 +36,8 @@ START_TEST(test_add_first_instruction) {
 	ck_assert_int_eq(program->ip, 4);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_mem_eq(program->instructions, expected_instructions, 5 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -53,6 +55,8 @@ START_TEST(test_add_mid_run) {
 	ck_assert_int_eq(program->ip, 8);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_mem_eq(program->instructions, expected_instructions, 9 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -69,6 +73,8 @@ START_TEST(test_mult) {
 	ck_assert_int_eq(program->ip, 4);
 	ck_assert_int_eq(program->state, PROGRAM_RUNNING);
 	ck_assert_mem_eq(program->instructions, expected_instructions, 5 * sizeof(int));
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -84,6 +90,8 @@ START_TEST(test_halt) {
 	ck_assert_int_eq(program->ip, 0);
 	ck_assert_int_eq(program->state, PROGRAM_HALTED);
 	ck_assert_int_eq(program->instructions[0], 99);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -96,6 +104,8 @@ START_TEST(test_bad_opcode) {
 	program_step(program);
 
 	ck_assert_int_eq(program->state, PROGRAM_ERROR);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -108,6 +118,8 @@ START_TEST(test_unexpected_program_end) {
 	program_step(program);
 
 	ck_assert_int_eq(program->state, PROGRAM_ERROR);
+
+	intcode_program_free(program);
 }
 END_TEST
 
@@ -120,6 +132,8 @@ START_TEST(test_index_out_of_range) {
 	program_step(program);
 
 	ck_assert_int_eq(program->state, PROGRAM_ERROR);
+
+	intcode_program_free(program);
 }
 END_TEST
 
