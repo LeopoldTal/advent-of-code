@@ -1,0 +1,31 @@
+# IDE
+.vscode
+
+# Build
+*.o
+*.in
+*.la
+*.lo
+*.log
+.deps/
+.libs/
+Makefile
+aclocal.m4
+ar-lib
+autom4te.cache/
+compile
+config.guess
+config.h
+config.status
+config.sub
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+main
+missing
+stamp-h1
+test-driver
+tests/check_intcode
+tests/check_intcode.trs
